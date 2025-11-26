@@ -14,7 +14,6 @@ export default class BlogStyleTopicContent extends Component {
   }
 
   get excerpt() {
-    return "这里是摘要。。。。。。"
     return this.topic.excerpt || this.topic.blurb || "";
   }
 

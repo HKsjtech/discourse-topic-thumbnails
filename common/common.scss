@@ -528,6 +528,7 @@
 
   .blog-style-topic-title {
     margin-bottom: 0.5em;
+    overflow: hidden;
 
     .blog-style-title-link {
       color: var(--primary);
@@ -536,8 +537,8 @@
       text-decoration: none;
       display: block;
       overflow: hidden;
-      word-wrap: break-word;
-      word-break: break-word;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       line-height: 1.4;
 
       &:hover {

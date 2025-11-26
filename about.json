@@ -6,6 +6,10 @@
   "license_url": null,
   "minimum_discourse_version": "2.5.0.beta4",
   "modifiers": {
+    "csp_extensions": ["script_src: https://unpkg.com"],
+    "svg_icons": ["images"],
+    "serialize_topic_excerpts": true,
+    "serialize_post_user_badges": ["staff","leader"],
     "topic_thumbnail_sizes": [
       [200, 200],
       [300, 300],
