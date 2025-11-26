@@ -7,6 +7,9 @@ import BlogStyleTopicContent from "../components/blog-style-topic-content";
 export default apiInitializer((api) => {
   const ttService = api.container.lookup("service:topic-thumbnails");
 
+  // 批量预加载功能已移至 connectors/before-topic-list-body/topic-list-image-preloader.gjs
+  // 使用 outlet 方式，避免使用已弃用的 modifyClass
+
   api.registerValueTransformer("topic-list-class", ({ value }) => {
     if (ttService.displayMinimalGrid) {
       value.push("topic-thumbnails-minimal");

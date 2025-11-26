@@ -575,7 +575,22 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    min-width: 0; // 防止 grid 子元素溢出
+    min-width: 0; // 防止 flex 子元素溢出
+  }
+
+  .topic-thumbnail-blog-images .topic-list-thumbnail {
+    flex: 1;
+    min-width: 0; // 允许 flex 子元素收缩
+    height: auto;
+    margin: 0;
+    float: none;
+    border-radius: 0.5em;
+    overflow: hidden;
+    background-color: var(--primary-low);
+    border: 1px solid var(--primary-low);
+    aspect-ratio: 1;
+    position: relative;
+    box-sizing: border-box;
   }
 
   .topic-list-thumbnail {

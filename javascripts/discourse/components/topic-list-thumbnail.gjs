@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 import coldAgeClass from "discourse/helpers/cold-age-class";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse/helpers/d-icon";
@@ -7,6 +8,9 @@ import formatDate from "discourse/helpers/format-date";
 
 export default class TopicListThumbnail extends Component {
   @service topicThumbnails;
+  @service("topic-content-loader") contentLoader;
+
+  @tracked extractedImages = [];
 
   responsiveRatios = [1, 1.5, 2];
 
@@ -21,14 +25,47 @@ export default class TopicListThumbnail extends Component {
     return this.args.topic;
   }
 
+  constructor() {
+    super(...arguments);
+    // 如果是 blog-style 模式，延迟加载图片（避免同时发起大量请求）
+    if (this.topicThumbnails.displayBlogStyle) {
+      // 使用 setTimeout 延迟加载，让组件先渲染（增加到 300ms）
+      setTimeout(() => {
+        this.loadImages();
+      }, 300);
+    }
+  }
+
   get hasThumbnail() {
+    if (this.topicThumbnails.displayBlogStyle) {
+      // blog-style 模式：检查是否有提取的图片
+      return this.imageUrls.length > 0;
+    }
+    // 其他模式：使用原有逻辑
     return !!this.topic.thumbnails;
   }
 
+  async loadImages() {
+    // blog-style 模式：从详情中加载图片
+    if (this.topicThumbnails.displayBlogStyle) {
+      const topicId = this.topic.id || this.topic.get?.("id");
+      if (topicId) {
+        const images = await this.contentLoader.loadTopicImages(topicId);
+        this.extractedImages = images;
+      }
+    }
+  }
+
   get imageUrls() {
-    // TODO：系统返回多张图片
-    if (this.topic.thumbnails.length > 0) {
-      return [this.topic.thumbnails[0].url, this.topic.thumbnails[0].url, this.topic.thumbnails[0].url];
+
+    if (this.topicThumbnails.displayBlogStyle) {
+      // blog-style 模式：使用从详情中提取的图片
+      return this.extractedImages;
+    }
+    
+    // 其他模式：使用系统返回的缩略图
+    if (this.topic.thumbnails && this.topic.thumbnails.length > 0) {
+      return [this.topic.thumbnails[0].url];
     }
 
     return [];
@@ -171,17 +208,14 @@ export default class TopicListThumbnail extends Component {
         <div class="topic-thumbnail-blog-images">
           {{#each this.imageUrls as |imageUrl|}}
             <div class="topic-list-thumbnail has-thumbnail">
-            <a href={{this.url}} role="img" aria-label={{this.topic.title}}>
-              <img
-                class="main-thumbnail"
-                src={{this.fallbackSrc}}
-                srcset={{this.imageUrl}}
-                width={{this.width}}
-                height={{this.height}}
-                loading="lazy"
-                alt=""
-              />
-            </a>
+              <a href={{this.url}} role="img" aria-label={{this.topic.title}}>
+                <img
+                  class="main-thumbnail"
+                  src={{imageUrl}}
+                  loading="lazy"
+                  alt=""
+                />
+              </a>
             </div>
           {{/each}}
         </div>
