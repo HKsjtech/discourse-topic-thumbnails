@@ -2,6 +2,7 @@ import { readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { apiInitializer } from "discourse/lib/api";
 import TopicListThumbnail from "../components/topic-list-thumbnail";
+import BlogStyleTopicContent from "../components/blog-style-topic-content";
 
 export default apiInitializer((api) => {
   const ttService = api.container.lookup("service:topic-thumbnails");
@@ -47,6 +48,16 @@ export default apiInitializer((api) => {
     <template>
       {{#if ttService.displayBlogStyle}}
         <TopicListThumbnail @topic={{@outletArgs.topic}} />
+      {{/if}}
+    </template>
+  );
+
+  // 为 blog-style 布局在标题位置插入自定义内容
+  api.renderInOutlet(
+    "topic-list-before-link",
+    <template>
+      {{#if ttService.displayBlogStyle}}
+        <BlogStyleTopicContent @topic={{@outletArgs.topic}} />
       {{/if}}
     </template>
   );

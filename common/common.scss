@@ -491,45 +491,72 @@
     }
   }
 
-  // 内容区域：标题和正文（在话题列表项中，不在缩略图组件中）
+  // 隐藏原有的标题和内容（由 Discourse 核心控制），但保留容器可见
   .main-link {
     grid-row: 2;
-    margin-bottom: 1em;
+    // 不隐藏整个容器，只隐藏原有内容
     padding: 0 !important;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    min-width: 0; // 防止 grid 子元素溢出
-    overflow: hidden;
+    min-width: 0;
+    overflow: visible; // 确保自定义内容可见
 
-    .docs-topic-link {
-      display: unset;
-    }
-
-    .link-top-line {
-      color: var(--primary);
-      font-size: var(--font-up-1);
-      font-weight: 600;
-      margin-bottom: 0.5em;
-      overflow: hidden;
-      word-wrap: break-word;
-      word-break: break-word;
+    // 隐藏原有的标题和链接
+    .link-top-line,
+    .link-bottom-line {
+      display: none;
     }
   }
 
   .topic-excerpt {
     grid-row: 3;
-    display: block;
+    display: none; // 隐藏原有摘要，使用自定义组件
+  }
+
+  // 自定义标题和内容区域
+  .blog-style-topic-content {
+    display: block !important; // 强制显示
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    overflow: hidden;
+    margin-bottom: 1em;
+    padding: 0;
+  }
+
+  .blog-style-topic-title {
+    margin-bottom: 0.5em;
+
+    .blog-style-title-link {
+      color: var(--primary);
+      font-size: var(--font-up-1);
+      font-weight: 600;
+      text-decoration: none;
+      display: block;
+      overflow: hidden;
+      word-wrap: break-word;
+      word-break: break-word;
+      line-height: 1.4;
+
+      &:hover {
+        color: var(--tertiary);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .blog-style-topic-excerpt {
     font-weight: normal;
     color: var(--primary-medium);
     font-size: var(--font-0);
     line-height: 1.5;
-    margin-bottom: 1em;
     padding: 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    min-width: 0; // 防止 grid 子元素溢出
+    min-width: 0;
     overflow: hidden;
     word-wrap: break-word;
     word-break: break-word;
