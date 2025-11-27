@@ -461,7 +461,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
+    }
 
   .topic-thumbnail-blog-date {
     font-size: var(--font-down-1);
@@ -504,7 +504,7 @@
 
     // 隐藏原有的标题和链接
     .link-top-line,
-    .link-bottom-line {
+  .link-bottom-line {
       display: none;
     }
   }
@@ -535,7 +535,7 @@
       font-size: var(--font-up-1);
       font-weight: 600;
       text-decoration: none;
-      display: block;
+    display: block;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

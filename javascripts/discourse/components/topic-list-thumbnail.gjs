@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import { modifier } from "ember-modifier";
 import coldAgeClass from "discourse/helpers/cold-age-class";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse/helpers/d-icon";
@@ -11,6 +12,8 @@ export default class TopicListThumbnail extends Component {
   @service("topic-content-loader") contentLoader;
 
   @tracked extractedImages = [];
+  @tracked isLoading = false;
+  @tracked hasLoaded = false;
 
   responsiveRatios = [1, 1.5, 2];
 
@@ -25,12 +28,8 @@ export default class TopicListThumbnail extends Component {
     return this.args.topic;
   }
 
-  constructor() {
-    super(...arguments);
-    if (this.topicThumbnails.displayBlogStyle) {
-      this.loadImages();
-    }
-  }
+  // Intersection Observer 用于检测元素是否进入视口
+  intersectionObserver = null;
 
   get hasThumbnail() {
     if (this.topicThumbnails.displayBlogStyle) {
@@ -42,16 +41,81 @@ export default class TopicListThumbnail extends Component {
   }
 
   async loadImages() {
+    // 防止重复加载
+    if (this.isLoading || this.hasLoaded) {
+      return;
+    }
+
     // blog-style 模式：从详情中加载图片
     if (this.topicThumbnails.displayBlogStyle) {
       const topicId = this.topic.id || this.topic.get?.("id");
-      const imageUrl = this.topic.image_url;
-      if (topicId && imageUrl) {
-        const images = await this.contentLoader.loadTopicImages(topicId);
-        this.extractedImages = images;
+      if (topicId) {
+        this.isLoading = true;
+        try {
+          const images = await this.contentLoader.loadTopicImages(topicId);
+          this.extractedImages = images;
+          this.hasLoaded = true;
+        } catch (error) {
+          console.error(`Failed to load images for topic ${topicId}:`, error);
+        } finally {
+          this.isLoading = false;
+        }
       }
     }
   }
+
+  // 使用 Intersection Observer 检测元素是否进入视口
+  setupIntersectionObserver = modifier((element) => {
+    // 只在 blog-style 模式下使用懒加载
+    if (!this.topicThumbnails.displayBlogStyle) {
+      return;
+    }
+
+    // 如果已经加载过，直接返回
+    if (this.hasLoaded) {
+      return;
+    }
+
+    // 检查浏览器是否支持 Intersection Observer
+    if (!window.IntersectionObserver) {
+      // 如果不支持，直接加载
+      this.loadImages();
+      return;
+    }
+
+    // 创建 Intersection Observer
+    this.intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // 当元素进入视口时（至少 10% 可见），开始加载
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.1) {
+            this.loadImages();
+            // 加载后停止观察
+            if (this.intersectionObserver) {
+              this.intersectionObserver.unobserve(element);
+            }
+          }
+        });
+      },
+      {
+        // 当元素 10% 进入视口时触发
+        threshold: 0.1,
+        // 提前 100px 开始加载（预加载）
+        rootMargin: "100px",
+      }
+    );
+
+    // 开始观察元素
+    this.intersectionObserver.observe(element);
+
+    // 清理函数
+    return () => {
+      if (this.intersectionObserver) {
+        this.intersectionObserver.disconnect();
+        this.intersectionObserver = null;
+      }
+    };
+  });
 
   get imageUrls() {
 
@@ -163,7 +227,8 @@ export default class TopicListThumbnail extends Component {
     {{#if this.topicThumbnails.displayBlogStyle}}
       {{! Blog style 布局：顶部用户信息 + 底部图片 }}
       {{! 顶部：用户信息和互动指标 }}
-      <div class="topic-thumbnail-blog-header">
+      {{! 使用 modifier 设置 Intersection Observer，监听 header 元素（第一个可见元素）}}
+      <div {{this.setupIntersectionObserver}} class="topic-thumbnail-blog-header">
         <div class="topic-thumbnail-blog-user-info">
           <div class="topic-thumbnail-blog-avatar">
           {{#if this.avatarUrl}}
