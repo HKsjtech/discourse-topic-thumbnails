@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import formatDate from "discourse/helpers/format-date";
+import { emojiUnescape } from "discourse/lib/text";
 
 export default class BlogStyleTopicContent extends Component {
   @service topicThumbnails;
@@ -14,7 +15,7 @@ export default class BlogStyleTopicContent extends Component {
   }
 
   get excerpt() {
-    return this.topic.excerpt || this.topic.blurb || "";
+    return emojiUnescape(this.topic.excerpt || this.topic.blurb || "");
   }
 
   get url() {
