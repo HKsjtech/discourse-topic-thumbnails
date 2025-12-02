@@ -33,7 +33,7 @@ export default class BlogStyleTopicContent extends Component {
       </div>
       {{#if this.excerpt}}
         <div class="blog-style-topic-excerpt">
-          {{this.excerpt}}
+          {{{this.excerpt}}}
         </div>
       {{/if}}
     </div>
