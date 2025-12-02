@@ -358,7 +358,7 @@
     height: auto;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto;
     background-color: var(--secondary);
     border: 1px solid var(--primary-low);
     border-radius: 0.5em;
@@ -399,10 +399,14 @@
     grid-row: 4;
   }
 
-  // 顶部区域：用户信息和互动指标
+  // 互动指标在第五行（右下角）
+  .topic-thumbnail-blog-engagement {
+    grid-row: 5;
+  }
+
+  // 顶部区域：用户信息
   .topic-thumbnail-blog-header {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 1em;
     padding-bottom: 0.75em;
@@ -493,8 +497,13 @@
   .topic-thumbnail-blog-engagement {
     display: flex;
     align-items: center;
+    justify-content: flex-end; // 右对齐
     gap: 1em;
     flex-shrink: 0;
+    margin-top: 0.75em; // 与图片区域保持间距
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .topic-thumbnail-blog-engagement-item {

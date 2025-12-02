@@ -238,8 +238,8 @@ export default class TopicListThumbnail extends Component {
 
   <template>
     {{#if this.topicThumbnails.displayBlogStyle}}
-      {{! Blog style 布局：顶部用户信息 + 底部图片 }}
-      {{! 顶部：用户信息和互动指标 }}
+      {{! Blog style 布局：顶部用户信息 + 底部图片 + 右下角互动指标 }}
+      {{! 顶部：用户信息 }}
       {{! 使用 modifier 设置 Intersection Observer，监听 header 元素（第一个可见元素）}}
       <div {{this.setupIntersectionObserver}} class="topic-thumbnail-blog-header">
         <div class="topic-thumbnail-blog-user-info">
@@ -265,21 +265,6 @@ export default class TopicListThumbnail extends Component {
             {{/if}}
           </div>
         </div>
-        
-        <div class="topic-thumbnail-blog-engagement">
-          <div class="topic-thumbnail-blog-engagement-item">
-            {{dIcon "comment"}}
-            <span class="number">
-              {{this.posts_count}}
-            </span>
-          </div>
-          <div class="topic-thumbnail-blog-engagement-item">
-            {{dIcon "heart"}}
-            <span class="number">
-              {{this.topic.like_count}}
-            </span>
-          </div>
-        </div>
       </div>
  
       {{! 底部：图片区域 }}
@@ -299,6 +284,22 @@ export default class TopicListThumbnail extends Component {
           {{/each}}
         </div>
       {{/if}}
+
+      {{! 右下角：互动指标（点赞和评论）}}
+      <div class="topic-thumbnail-blog-engagement">
+        <div class="topic-thumbnail-blog-engagement-item">
+          {{dIcon "comment"}}
+          <span class="number">
+            {{this.posts_count}}
+          </span>
+        </div>
+        <div class="topic-thumbnail-blog-engagement-item">
+          {{dIcon "heart"}}
+          <span class="number">
+            {{this.topic.like_count}}
+          </span>
+        </div>
+      </div>
     {{else}}
       {{! 其他布局模式：保持原有结构 }}
       <div
