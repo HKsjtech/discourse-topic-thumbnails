@@ -57,7 +57,7 @@ export default class TopicContentLoaderService extends Service {
 
     // 如果没有找到封面图，按原来的逻辑返回最多 maxImages 张图片
     const imageUrls = [];
-    for (let i = 0; i < Math.min(images.length, maxImages); i++) {
+    for (let i = 0; i < images.length && imageUrls.length < maxImages; i++) {
       const img = images[i];
       const src = img.getAttribute("src") || img.getAttribute("data-src");
 
