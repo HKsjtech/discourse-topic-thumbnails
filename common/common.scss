@@ -271,6 +271,13 @@
       font-size: 13px;
       margin-right: 0.5em;
     }
+
+    .topic-thumbnail-heart {
+      width: 18px;
+      height: 18px;
+      margin-right: 0.5em;
+      flex-shrink: 0;
+    }
   }
 
   .posts-map {
@@ -351,7 +358,8 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: visible;
+    padding: 8px 8px 0;
   }
 
   .topic-list-item {
@@ -360,16 +368,18 @@
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto auto;
     background-color: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: 0.5em;
+    border: 0;
+    border-radius: 1.5em;
     overflow: hidden;
-    padding: 1em;
+    padding: 1.5em;
     position: relative;
     gap: 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     min-width: 0; // 防止 grid 子元素溢出
+    margin-bottom: 1em;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.08);
   }
 
   // 确保缩略图列包含所有内容，并放在第一行
@@ -409,8 +419,8 @@
     display: flex;
     align-items: flex-start;
     margin-bottom: 1em;
-    padding-bottom: 0.75em;
-    border-bottom: 1px solid var(--primary-low);
+    padding-bottom: 1em;
+    border-bottom: 1px solid #e3e3e3;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -438,8 +448,8 @@
   }
 
   .topic-thumbnail-blog-avatar {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
@@ -464,7 +474,7 @@
   .topic-thumbnail-blog-user-details {
     display: flex;
     flex-direction: column;
-    gap: 0.25em;
+    gap: 0.5em;
     min-width: 0; // 防止文本溢出
     overflow: hidden;
   }
@@ -481,17 +491,18 @@
   }
 
   .topic-thumbnail-blog-username {
-    font-weight: 600;
+    font-weight: bold;
     color: var(--primary);
-    font-size: var(--font-up-1);
+    font-size: 14px;
+    line-height: 1.2;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     }
 
   .topic-thumbnail-blog-date {
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    font-size:14px;
+    color: #A5A7AC;
   }
 
   .topic-thumbnail-blog-engagement {
@@ -515,6 +526,13 @@
 
     .d-icon {
       font-size: var(--font-0);
+    }
+
+    .topic-thumbnail-heart,
+    .topic-thumbnail-comment {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
     }
 
     .number {
@@ -557,19 +575,19 @@
   }
 
   .blog-style-topic-title {
-    margin-bottom: 0.5em;
+    margin-bottom: .45em;
     overflow: hidden;
 
     .blog-style-title-link {
       color: var(--primary);
-      font-size: var(--font-up-1);
+      font-size: 20px;
       font-weight: 600;
       text-decoration: none;
     display: block;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      line-height: 1.4;
+      line-height: 1.2;
 
       &:hover {
         color: var(--tertiary);
@@ -580,9 +598,9 @@
 
   .blog-style-topic-excerpt {
     font-weight: normal;
-    color: var(--primary-medium);
-    font-size: var(--font-0);
-    line-height: 1.5;
+    color: #6b7078;
+    font-size: 14px;
+    line-height: 21px;
     padding: 0;
     width: 100%;
     max-width: 100%;
